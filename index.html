@@ -1,244 +1,284 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="vi" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Happy Birthday, [Enter Name of your loved one]!</title>
+  <title>Chúc Mừng Sinh Nhật Em Yêu ❤️ 25.10.2004</title>
 
-  <!-- This script pulls in Tailwind CSS for styling -->
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- These are for the animations and photo gallery -->
+  <!-- Thư viện hiệu ứng AOS và LightGallery -->
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.7.1/css/lightgallery.min.css" />
 
-  <!-- Google Fonts for the Anime look -->
+  <!-- Google Fonts tiếng Việt chuẩn 100% không lỗi dấu -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Comfortaa:wght@600;700&family=Dancing+Script:wght@600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
 
-  <!-- Link to your new external CSS file -->
+  <!-- File CSS tùy chỉnh -->
   <link rel="stylesheet" href="style.css">
-  <!-- IMPORTANT: Replace with a real image link after you upload it -->
-  <meta property="og:image" content="https://placehold.co/1200x630/87CEEB/FFFFFF?text=A+Surprise+For+[Name]">
+  <meta property="og:image" content="https://placehold.co/1200x630/FFB7C5/FFFFFF?text=Happy+Birthday+My+Love">
 </head>
-<body>
-<!-- Canvas for the falling cherry blossoms -->
+<body class="relative">
+
+<!-- Nhạc nền và nút điều khiển bật / tắt nhạc -->
+<audio id="bg-music" src="music/Thegioicuaanh.m4a" loop preload="auto">
+  <source src="music/Thegioicuaanh.m4a" type="audio/mp4">
+  <source src="music/Thegioicuaanh.m4a">
+  Trình duyệt của bạn không hỗ trợ phát âm thanh.
+</audio>
+
+<button id="music-toggle-btn" class="music-btn" title="Bật/Tắt nhạc nền" aria-label="Bật/Tắt nhạc">
+  <span id="music-disc" class="inline-block text-xl disc-paused select-none">💿</span>
+  <span id="music-text" class="text-xs md:text-sm font-semibold text-pink-600 select-none">Bật nhạc</span>
+  <div id="sound-wave" class="sound-wave inactive">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</button>
+
+<!-- Canvas cho hiệu ứng cánh hoa anh đào rơi -->
 <canvas id="sakura-canvas"></canvas>
 
-<!-- Section 1: Hero Welcome -->
-<header class="h-screen relative flex items-center justify-center text-white overflow-hidden">
+<!-- Phần 1: Lời chào đón rực rỡ (Hero Welcome) -->
+<header class="min-h-screen relative flex items-center justify-center text-white overflow-hidden py-16 px-4">
   <video autoplay loop muted playsinline class="absolute top-0 left-0 w-full h-full object-cover z-[-1]">
     <source src="img/sa.mp4" type="video/mp4">
-    Your browser does not support the video tag.
+    Trình duyệt không hỗ trợ video nền.
   </video>
 
-  <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+  <div class="absolute inset-0 bg-black/45 backdrop-blur-[1px]"></div>
 
-  <div class="text-center z-10 p-4" data-aos="fade-in" data-aos-duration="1500">
-    <h1 class="text-5xl md:text-7xl font-anime drop-shadow-lg">Happy Birthday, [Enter Name of your loved one]!</h1>
-    <p class="mt-4 text-xl font-semibold">Celebrating a wonderful journey of...[in background you can add video or photos of your loved one]</p>
-    <div id="countdown" class="mt-6 text-2xl font-semibold tracking-widest leading-relaxed"></div>
+  <div class="text-center z-10 max-w-4xl mx-auto p-4" data-aos="fade-in" data-aos-duration="1500">
+    <span class="inline-block px-4 py-1.5 rounded-full bg-pink-500/80 text-white text-xs md:text-sm font-semibold tracking-wider uppercase mb-4 shadow-lg backdrop-blur-md">
+      ✨ 25.10.2004 — Món Quà Vô Giá Của Cuộc Đời ✨
+    </span>
+    
+    <h1 class="text-4xl md:text-6xl lg:text-7xl font-anime drop-shadow-xl text-pink-100">
+      Chúc Mừng Sinh Nhật Em Yêu!
+    </h1>
+    
+    <p class="mt-4 text-lg md:text-2xl font-romantic text-pink-200 tracking-wide drop-shadow-md">
+      "Mỗi giây phút có em bên đời đều là khoảnh khắc kỳ diệu và bình yên nhất của anh..."
+    </p>
+
+    <!-- Bộ đếm thời gian từ ngày sinh nhật 25/10/2004 -->
+    <div class="mt-8 bg-black/30 backdrop-blur-md p-6 rounded-2xl border border-white/20 shadow-2xl max-w-2xl mx-auto">
+      <p class="text-sm md:text-base font-medium text-pink-200">Thời gian em mang ánh sáng ấm áp đến thế gian:</p>
+      <div id="countdown" class="mt-2 text-xl md:text-2xl font-semibold tracking-wide"></div>
+    </div>
   </div>
 </header>
 
-<!-- Main Content -->
-<main class="container mx-auto p-6 md:p-12">
+<!-- Nội dung chính -->
+<main class="container mx-auto p-4 md:p-10 relative z-10">
 
-  <!-- Section 2: A Letter For You -->
+  <!-- Phần Bộ Đếm Tình Yêu (Love Counter) -->
+  <section class="my-12 md:my-16 max-w-3xl mx-auto" data-aos="zoom-in">
+    <div class="bg-white/90 backdrop-blur-md p-6 md:p-8 rounded-2xl shadow-xl border-2 border-pink-200">
+      <div id="love-counter"></div>
+    </div>
+  </section>
+
+  <!-- Phần 2: Bức Thư Tình Gửi Em -->
   <section class="my-16 md:my-24 max-w-3xl mx-auto text-center" data-aos="fade-up">
-    <h2 class="text-4xl md:text-5xl font-anime text-sakura mb-8 drop-shadow-sm">A Special Message For You</h2>
-    <div class="text-left text-lg leading-relaxed space-y-4 bg-white p-8 rounded-lg shadow-lg">
-      <!-- TODO: Write your personal letter here -->
-      <p>Hey [Enter Name of your loved one],</p>
-      <p>Wish you a very Happy Birthday [Enter Name of your loved one]! May god fulfil all your wishes, you have an endless supply of happy days and your dreams turns into reality, A life surrounded with pets and life that will become a manga </p>
-      <p>Thankyou for always being so kind and reason behind everyone smile, Always connected to your roots , A true friend to everyone, You always be yourself and that's your vibe We all are very lucky, we are not in city of gems still we found a real gem.</p>
-      <p class="text-right mt-8">
-        Regards<br>
+    <h2 class="text-3xl md:text-5xl font-anime text-sakura mb-8 drop-shadow-sm flex items-center justify-center gap-2">
+      <span>💌</span> Bức Thư Gửi Em Yêu
+    </h2>
+    <div class="text-left text-base md:text-lg leading-relaxed space-y-4 bg-white/95 backdrop-blur-md p-6 md:p-10 rounded-2xl shadow-xl border border-pink-100 text-gray-700">
+      <p class="font-bold text-pink-600 text-lg md:text-xl font-romantic text-2xl">
+        Gửi em — công chúa nhỏ và là điều dịu dàng nhất của anh,
+      </p>
+      <p>
+        Hôm nay là một ngày vô cùng đặc biệt — ngày kỷ niệm <strong>25/10/2004</strong>, ngày mà một thiên thần đáng yêu cất tiếng khóc chào đời để rồi sau này trở thành món quà vô giá nhất trong cuộc đời anh.
+      </p>
+      <p>
+        Anh vẫn luôn nhớ rõ ngày đầu tiên, buổi gặp gỡ đầu tiên định mệnh ấy. Em cho anh chờ cũng lâu đấy may mà anh là một con người kiên nhẫn nên hai ta nên đôi thành cặp.
+      </p>
+      <p>
+        Thời gian thấm thoắt trôi và đến giờ chúng ta đã cùng nhau trải qua rất nhiều điều, từ những khoảnh khắc ngọt ngào, những nụ cười hạnh phúc, cho đến những thử thách và khó khăn. Nhưng điều quan trọng là chúng ta luôn bên nhau, cùng nhau vượt qua mọi thứ.
+      </p>
+      <p>
+        Em luôn hỏi anh là tại sao anh yêu em và anh chỉ có thể nói rằng anh yêu em vì em là chính em - là người con gái vừa xinh đẹp vừa đáng yêu giỏi giang vân vân và mây mây. Quá nhiều điều để có thể nói thành câu.
+      </p>
+      <p>
+        Tuổi mới sang, anh chúc cô gái của anh luôn xinh đẹp rạng rỡ, luôn giữ được nụ cười hồn nhiên trên môi, gặp thật nhiều may mắn và đạt được tất cả những ước mơ mà em hằng ấp ủ. Dù cuộc sống ngoài kia có đôi lúc khiến em mỏi mệt, ý là sếp với công ty láo toét ấy thì anh vẫn ở đây để lắng nghe và u know.
+      </p>
+      <p>
+        Anh mong là sang năm sau năm sau nữa và sau nữa nữa rồi mãi về sau này năm nào anh cũng sẽ được chúc mừng sinh nhật em như thế này, được ôm em và hôn em, được thấy em cười. Và đương nhiên rồi nâng cấp cái này lên bản 2.0 3.0 các thứ.
+      </p>
+      <p class="text-right mt-6 font-romantic text-2xl md:text-3xl text-pink-600">
+        Yêu em nhiều hơn mỗi ngày ❤️<br>
+        <span class="text-sm font-sans text-gray-500 font-normal">Your handsome boyfriend</span>
       </p>
     </div>
   </section>
 
-  <!-- Section 3: The Timeline -->
+  <!-- Kho Báu Khoảnh Khắc Ngọt Ngào (Hall of Fame) -->
   <section class="my-16 md:my-24">
-    <h2 class="text-4xl md:text-5xl font-anime text-center mb-12" data-aos="fade-up">Your Story Arc</h2>
-    <div class="space-y-16">
-      <!-- Timeline Item 1 -->
-      <div class="flex flex-col md:flex-row items-center gap-8" data-aos="fade-right">
-        <!-- TODO: Replace with your photo -->
-        <img src="img/img1.png" alt="Add photo 1" class="w-full md:w-1/2 rounded-lg shadow-xl border-4 border-white"> <!--replce img1.png with name of your img-->
-        <div class="text-center md:text-left">
-          <!-- TODO: Customize the date and story -->
-          <h3 class="text-2xl font-anime text-sakura">Our first Meeting</h3>
-          <p class="mt-2 text-lg">Write your Story here</p>
-            <br>
-        </div>
-      </div>
-      <!-- Timeline Item 2 -->
-      <div class="flex flex-col md:flex-row-reverse items-center gap-8" data-aos="fade-left">
-        <!-- TODO: Replace with your photo -->
-        <img src="img/img2.png" alt="Add photo 2" class="w-full md:w-1/2 rounded-lg shadow-xl border-4 border-white">
-        <div class="text-center md:text-right">
-          <!-- TODO: Customize the date and story -->
-          <h3 class="text-2xl font-anime text-sakura">Part 2</h3>
-          <p class="mt-2 text-lg">Message 2</p>
-         <br>
-        </div>
-      </div>
-      <!-- Timeline Item 3 (NEW) -->
-      <div class="flex flex-col md:flex-row items-center gap-8" data-aos="fade-right">
-        <img src="img/img3.png" alt="Add photo 3" class="w-full md:w-1/2 rounded-lg shadow-xl border-4 border-white">
-        <div class="text-center md:text-left">
-          <h3 class="text-2xl font-anime text-sakura">Part3</h3>
-          <p class="mt-2 text-lg">Message3</p>
-         <br>
-        </div>
-      </div>
-      <!-- Timeline Item 4 (NEW) -->
-      <div class="flex flex-col md:flex-row-reverse items-center gap-8" data-aos="fade-left">
-        <img src="img/img4.png" alt="Add photo4" class="w-full md:w-1/2 rounded-lg shadow-xl border-4 border-white">
-        <div class="text-center md:text-right">
-          <h3 class="text-2xl font-anime text-sakura">Part 4</h3>
-          <p class="mt-2 text-lg">Message 4</p>
-            <br>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Section 4: Your Favourite Photos of your loved Ones (NEW SECTION) -->
-  <section class="my-16 md:my-24">
-    <h2 class="text-4xl md:text-5xl font-anime text-center mb-12" data-aos="fade-up">Hall of Fame</h2>
+    <h2 class="text-3xl md:text-5xl font-anime text-center mb-4 text-gray-800" data-aos="fade-up">
+      ✨ Kho Báu Kỷ Niệm
+    </h2>
+    <p class="text-center text-gray-500 mb-12 text-sm md:text-base font-medium" data-aos="fade-up">Những khoảnh khắc ngọt ngào nhất của em trong trái tim anh</p>
+    
     <div class="relative">
-      <!-- Scroll Buttons -->
-      <button id="scroll-left-btn" class="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white/80 hover:bg-white rounded-full p-2 shadow-md transition-opacity opacity-0 md:opacity-100">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-sakura" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+      <!-- Nút cuộn trái/phải -->
+      <button id="scroll-left-btn" class="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white rounded-full p-3 shadow-lg transition-transform hover:scale-110" aria-label="Cuộn sang trái">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+        </svg>
       </button>
-      <button id="scroll-right-btn" class="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white/80 hover:bg-white rounded-full p-2 shadow-md transition-opacity opacity-0 md:opacity-100">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-sakura" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+      <button id="scroll-right-btn" class="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white rounded-full p-3 shadow-lg transition-transform hover:scale-110" aria-label="Cuộn sang phải">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+        </svg>
       </button>
 
-      <!-- Scrollable Container -->
+      <!-- Khung chứa ảnh cuộn -->
       <div id="hall-of-fame-scroller" class="flex overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-hide p-4 -mx-4">
-        <div class="flex snap-x snap-mandatory gap-8">
-          <!--  Card 1 -->
+        <div class="flex snap-x snap-mandatory gap-6">
+          
+          <!-- Thẻ 1 -->
           <div class="snap-center flex-shrink-0 w-10/12 sm:w-1/2 md:w-1/3 lg:w-1/4" data-aos="fade-up" data-aos-delay="100">
-            <div class="bg-white p-6 rounded-lg shadow-lg text-center h-full">
-              <img src="img/image1.png" alt="Photo 1" class="w-full h-80 object-cover rounded-md mb-4"> 
-              <h3 class="text-2xl font-anime text-sakura">Photo 1</h3>
-              <p class="mt-2">"Caption 1”"</p>
+            <div class="bg-white p-5 rounded-2xl shadow-lg text-center h-full border border-pink-100 flex flex-col justify-between">
+              <img src="img/nucuoitoanang.jpeg" alt="Nụ Cười Tỏa Nắng" class="w-full h-72 object-cover rounded-xl mb-4 shadow-inner"> 
+              <div>
+                <h3 class="text-xl font-anime text-sakura">Nụ Cười Tỏa Nắng</h3>
+                <p class="mt-2 text-sm text-gray-600 font-romantic text-lg">"Nụ cười của em là điều ngọt ngào nhất thế gian"</p>
+              </div>
             </div>
           </div>
-          <!--  Card 2 -->
+
+          <!-- Thẻ 2 -->
           <div class="snap-center flex-shrink-0 w-10/12 sm:w-1/2 md:w-1/3 lg:w-1/4" data-aos="fade-up" data-aos-delay="200">
-            <div class="bg-white p-6 rounded-lg shadow-lg text-center h-full">
-              <img src="img/image2.png" alt="Photo 2" class="w-full h-80 object-cover rounded-md mb-4">
-              <h3 class="text-2xl font-anime text-sakura">Photo 2</h3>
-              <p class="mt-2">"Caption 2"</p>
+            <div class="bg-white p-5 rounded-2xl shadow-lg text-center h-full border border-pink-100 flex flex-col justify-between">
+              <img src="img/nangtho.jpeg" alt="Nắng Thơ của anh" class="w-full h-72 object-cover rounded-xl mb-4 shadow-inner">
+              <div>
+                <h3 class="text-xl font-anime text-sakura">Nàng Thơ</h3>
+                <p class="mt-2 text-sm text-gray-600 font-romantic text-lg">"Em là nàng thơ duy nhất mà anh muốn trong đời"</p>
+              </div>
             </div>
           </div>
-          <!--  Card 3 -->
+
+          <!-- Thẻ 3 -->
           <div class="snap-center flex-shrink-0 w-10/12 sm:w-1/2 md:w-1/3 lg:w-1/4" data-aos="fade-up" data-aos-delay="300">
-            <div class="bg-white p-6 rounded-lg shadow-lg text-center h-full">
-              <img src="img/image3.png" alt="Photo 3" class="w-full h-80 object-cover rounded-md mb-4">
-              <h3 class="text-2xl font-anime text-sakura">Photo 3</h3>
-              <p class="mt-2">"Caption 3"</p>
+            <div class="bg-white p-5 rounded-2xl shadow-lg text-center h-full border border-pink-100 flex flex-col justify-between">
+              <img src="img/baibien.jpeg" alt="Đẹp nhất bãi biển" class="w-full h-72 object-cover rounded-xl mb-4 shadow-inner">
+              <div>
+                <h3 class="text-xl font-anime text-sakura">Đẹp nhất bãi biển</h3>
+                <p class="mt-2 text-sm text-gray-600 font-romantic text-lg">"Em là tâm điểm của mọi sự chú ý"</p>
+              </div>
             </div>
           </div>
-          <!--  Card 4 -->
+
+          <!-- Thẻ 4 -->
           <div class="snap-center flex-shrink-0 w-10/12 sm:w-1/2 md:w-1/3 lg:w-1/4" data-aos="fade-up" data-aos-delay="400">
-            <div class="bg-white p-6 rounded-lg shadow-lg text-center h-full">
-              <img src="img/image4.png" alt="Photo 4" class="w-full h-80 object-cover rounded-md mb-4">
-              <h3 class="text-2xl font-anime text-sakura">Photo 4</h3>
-              <p class="mt-2">"Caption 4"</p>
+            <div class="bg-white p-5 rounded-2xl shadow-lg text-center h-full border border-pink-100 flex flex-col justify-between">
+              <img src="img/xinhhonhoa.jpg" alt="Hoa ghen thua sắc" class="w-full h-72 object-cover rounded-xl mb-4 shadow-inner">
+              <div>
+                <h3 class="text-xl font-anime text-sakura">Hoa ghen thua sắc</h3>
+                <p class="mt-2 text-sm text-gray-600 font-romantic text-lg">"Em là bông hoa đẹp nhất trong mắt anh"</p>
+              </div>
             </div>
           </div>
-          <!--  Card 5 -->
+
+          <!-- Thẻ 5 -->
           <div class="snap-center flex-shrink-0 w-10/12 sm:w-1/2 md:w-1/3 lg:w-1/4" data-aos="fade-up" data-aos-delay="500">
-            <div class="bg-white p-6 rounded-lg shadow-lg text-center h-full">
-              <img src="img/image5.png" alt="Photo 5" class="w-full h-80 object-cover rounded-md mb-4">
-              <h3 class="text-2xl font-anime text-sakura">Photo 5</h3>
-              <p class="mt-2">"Caption 5"</p>
+            <div class="bg-white p-5 rounded-2xl shadow-lg text-center h-full border border-pink-100 flex flex-col justify-between">
+              <img src="img/qualaxinhroi.jpeg" alt="Công Chúa Của Anh" class="w-full h-72 object-cover rounded-xl mb-4 shadow-inner">
+              <div>
+                <h3 class="text-xl font-anime text-sakura">Công Chúa Của Anh</h3>
+                <p class="mt-2 text-sm text-gray-600 font-romantic text-lg">"Đáng yêu, bướng bỉnh và luôn là duy nhất"</p>
+              </div>
             </div>
           </div>
-          <!-- Card 6 -->
-          <div class="snap-center flex-shrink-0 w-10/12 sm:w-1/2 md:w-1/3 lg:w-1/4" data-aos="fade-up" data-aos-delay="600">
-            <div class="bg-white p-6 rounded-lg shadow-lg text-center h-full">
-              <img src="img/image6.png" alt="Photo 6" class="w-full h-80 object-cover rounded-md mb-4">
-              <h3 class="text-2xl font-anime text-sakura">Photo 6</h3>
-              <p class="mt-2">"Caption 6"</p>
-            </div>
-          </div>
+
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Section 5: The Gallery -->
+  <!-- Phần 5: Album Kỷ Niệm (The Gallery) -->
   <section class="my-16 md:my-24">
-    <h2 class="text-4xl md:text-5xl font-anime text-center mb-12" data-aos="fade-up">The Y.V.A. Collection</h2>
-    <p class="text-center text-lg -mt-8 mb-12">(Your Very-own Adventures)</p>
+    <h2 class="text-3xl md:text-5xl font-anime text-center mb-4 text-gray-800" data-aos="fade-up">
+      📸 Album Kỷ Niệm Của Đôi Mình
+    </h2>
+    <p class="text-center text-gray-500 mb-12 text-sm md:text-base font-medium" data-aos="fade-up">
+      (Những mảnh ghép hạnh phúc chúng ta cùng nhau gom nhặt)
+    </p>
+    
     <div id="lightgallery" class="grid grid-cols-2 md:grid-cols-4 gap-4">
-      <a href="img/1.png" data-aos="zoom-in" class="block w-full h-48 md:h-64">
-        <img src="img/1.png" class="rounded-lg shadow-lg hover:scale-105 transition-transform duration-300 w-full h-full object-cover border-4 border-white" alt="Memory 1">
+      <a href="img/1.png" data-aos="zoom-in" class="block w-full h-48 md:h-64 overflow-hidden rounded-xl shadow-md border-4 border-white group">
+        <img src="img/1.jpg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="Kỷ niệm 1">
       </a>
-      <a href="img/2.png" data-aos="zoom-in" data-aos-delay="100" class="block w-full h-48 md:h-64">
-        <img src="img/2.png" class="rounded-lg shadow-lg hover:scale-105 transition-transform duration-300 w-full h-full object-cover border-4 border-white" alt="Memory 2">
+      <a href="img/2.png" data-aos="zoom-in" data-aos-delay="100" class="block w-full h-48 md:h-64 overflow-hidden rounded-xl shadow-md border-4 border-white group">
+        <img src="img/2.jpg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="Kỷ niệm 2">
       </a>
-      <a href="img/3.png" data-aos="zoom-in" data-aos-delay="200" class="block w-full h-48 md:h-64">
-        <img src="img/3.png" class="rounded-lg shadow-lg hover:scale-105 transition-transform duration-300 w-full h-full object-cover border-4 border-white" alt="Memory 3">
+      <a href="img/3.png" data-aos="zoom-in" data-aos-delay="200" class="block w-full h-48 md:h-64 overflow-hidden rounded-xl shadow-md border-4 border-white group">
+        <img src="img/3.jpg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="Kỷ niệm 3">
       </a>
-      <a href="img/4.png" data-aos="zoom-in" data-aos-delay="300" class="block w-full h-48 md:h-64">
-        <img src="img/4.png" class="rounded-lg shadow-lg hover:scale-105 transition-transform duration-300 w-full h-full object-cover border-4 border-white" alt="Memory 4">
+      <a href="img/4.png" data-aos="zoom-in" data-aos-delay="300" class="block w-full h-48 md:h-64 overflow-hidden rounded-xl shadow-md border-4 border-white group">
+        <img src="img/4.jpg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="Kỷ niệm 4">
       </a>
-      <!-- Second Row of Photos -->
-      <a href="img/5.png" data-aos="zoom-in" data-aos-delay="400" class="block w-full h-48 md:h-64">
-        <img src="img/5.png" class="rounded-lg shadow-lg hover:scale-105 transition-transform duration-300 w-full h-full object-cover border-4 border-white" alt="Memory 5">
+      <!-- Hàng 2 -->
+      <a href="img/5.png" data-aos="zoom-in" data-aos-delay="400" class="block w-full h-48 md:h-64 overflow-hidden rounded-xl shadow-md border-4 border-white group">
+        <img src="img/5.jpg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="Kỷ niệm 5">
       </a>
-      <a href="img/6.png" data-aos="zoom-in" data-aos-delay="500" class="block w-full h-48 md:h-64">
-        <img src="img/6.png" class="rounded-lg shadow-lg hover:scale-105 transition-transform duration-300 w-full h-full object-cover border-4 border-white" alt="Memory 6">
+      <a href="img/6.png" data-aos="zoom-in" data-aos-delay="500" class="block w-full h-48 md:h-64 overflow-hidden rounded-xl shadow-md border-4 border-white group">
+        <img src="img/6.jpeg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="Kỷ niệm 6">
       </a>
-      <a href="img/7.png" data-aos="zoom-in" data-aos-delay="600" class="block w-full h-48 md:h-64">
-        <img src="img/7.png" class="rounded-lg shadow-lg hover:scale-105 transition-transform duration-300 w-full h-full object-cover border-4 border-white" alt="Memory 7">
+      <a href="img/7.png" data-aos="zoom-in" data-aos-delay="600" class="block w-full h-48 md:h-64 overflow-hidden rounded-xl shadow-md border-4 border-white group">
+        <img src="img/7.jpeg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="Kỷ niệm 7">
       </a>
-      <a href="img/8.png" data-aos="zoom-in" data-aos-delay="700" class="block w-full h-48 md:h-64">
-        <img src="img/8.png" class="rounded-lg shadow-lg hover:scale-105 transition-transform duration-300 w-full h-full object-cover border-4 border-white" alt="Memory 8">
+      <a href="img/8.png" data-aos="zoom-in" data-aos-delay="700" class="block w-full h-48 md:h-64 overflow-hidden rounded-xl shadow-md border-4 border-white group">
+        <img src="img/8.jpeg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="Kỷ niệm 8">
       </a>
-      <!-- Third Row of Photos -->
-      <a href="img/9.png" data-aos="zoom-in" data-aos-delay="800" class="block w-full h-48 md:h-64">
-        <img src="img/9.png" class="rounded-lg shadow-lg hover:scale-105 transition-transform duration-300 w-full h-full object-cover border-4 border-white" alt="Memory 9">
+      <!-- Hàng 3 -->
+      <a href="img/9.png" data-aos="zoom-in" data-aos-delay="800" class="block w-full h-48 md:h-64 overflow-hidden rounded-xl shadow-md border-4 border-white group">
+        <img src="img/9.jpeg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="Kỷ niệm 9">
       </a>
-      <a href="img/10.png" data-aos="zoom-in" data-aos-delay="900" class="block w-full h-48 md:h-64">
-        <img src="img/10.png" class="rounded-lg shadow-lg hover:scale-105 transition-transform duration-300 w-full h-full object-cover border-4 border-white" alt="Memory 10">
-      </a>
-      <a href="img/11.png" data-aos="zoom-in" data-aos-delay="1000" class="block w-full h-48 md:h-64">
-        <img src="img/11.png" class="rounded-lg shadow-lg hover:scale-105 transition-transform duration-300 w-full h-full object-cover border-4 border-white" alt="Memory 11">
-      </a>
-      <a href="img/12.png" data-aos="zoom-in" data-aos-delay="1100" class="block w-full h-48 md:h-64">
-        <img src="img/12.png" class="rounded-lg shadow-lg hover:scale-105 transition-transform duration-300 w-full h-full object-cover border-4 border-white" alt="Memory 12">
+      <a href="img/10.png" data-aos="zoom-in" data-aos-delay="900" class="block w-full h-48 md:h-64 overflow-hidden rounded-xl shadow-md border-4 border-white group">
+        <img src="img/10.jpeg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="Kỷ niệm 10">
       </a>
     </div>
   </section>
 
-    <!-- Section 6: Finale -->
-    <section class="my-16 md:my-24" data-aos="fade-up">
-        <h2 class="text-4xl md:text-5xl font-anime text-center mb-4">Happy Birthday [Enter Name of your loved one]</h2>
-        <div class="max-w-4xl mx-auto rounded-lg shadow-2xl overflow-hidden bg-navy">
-    </section>
+  <!-- Phần 6: Lời Kết Yêu Thương (Finale) -->
+  <section class="my-16 md:my-24 text-center" data-aos="fade-up">
+    <div class="max-w-3xl mx-auto rounded-3xl p-8 md:p-12 bg-gradient-to-br from-pink-500 via-pink-400 to-rose-400 text-white shadow-2xl relative overflow-hidden">
+      <div class="relative z-10">
+        <span class="text-5xl md:text-6xl inline-block mb-4 animate-bounce">💖</span>
+        <h2 class="text-3xl md:text-5xl font-anime mb-4 drop-shadow-md">
+          Happy Birthday, Em Yêu!
+        </h2>
+        <p class="text-lg md:text-xl font-romantic text-pink-100 mb-6 leading-relaxed">
+          "Cảm ơn em vì đã sinh ra, đã đến bên anh và cùng anh tạo nên những ký ức đẹp đẽ nhất. Chúc em tuổi mới luôn rực rỡ, bình an và ngập tràn hạnh phúc!"
+        </p>
+      
+      </div>
+    </div>
+  </section>
 
 </main>
 
-<!-- Footer -->
-<footer class="bg-navy text-white p-8 text-center">
-  <p>Enjoy your day to the fullest.</p>
-  <p class="text-sm opacity-70 mt-2">Hope you liked it...</p>
+<!-- Chân trang (Footer) -->
+<footer class="bg-gray-900 text-white py-8 px-4 text-center relative z-10">
+  <p class="text-base md:text-lg font-medium text-pink-200">
+    Chúc em có một ngày sinh nhật thật ấm áp và trọn vẹn nhất ❤️
+  </p>
+  <p class="text-xs md:text-sm text-gray-400 mt-2 font-light">
+    Được tạo ra với tất cả tình yêu thương dành cho em.
+  </p>
 </footer>
 
-<!-- These scripts are for the animations and photo gallery -->
+<!-- Các thư viện JS hỗ trợ -->
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.7.1/lightgallery.min.js"></script>
 
-<!-- Link to your new external JavaScript file -->
+<!-- File JavaScript chính -->
 <script src="script.js"></script>
 </body>
 </html>
